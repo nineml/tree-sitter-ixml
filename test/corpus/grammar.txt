@@ -1,0 +1,153 @@
+=================
+simple rule
+=================
+
+^s: a .
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))))))
+
+=================
+simple rule with comments
+=================
+
+^s: { comment } a  {also a comment } .
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (name)
+    (comment)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))))
+    (comment)))
+
+=================
+rule without a mark
+=================
+
+s: a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))))))
+
+=================
+grammar with a prolog
+=================
+
+ixml version "1.0" .
+s: a .
+
+---
+
+(source_file
+  (prolog
+    (version
+      (string)))
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))))))
+
+=================
+two rules
+=================
+
+s: a .
+a: b .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name)))))))
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))))))
+
+=================
+a rule named “ixml”
+=================
+
+ixml: S, rules.
+
+---
+
+(source_file
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (nonterminal
+              (name))))
+        (term
+          (factor
+            (nonterminal
+              (name))))))))
+
+=================
+a member that’s a character
+=================
+
+-S: -["."] .
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (charset
+                (inclusion
+                  (tmark)
+                  (set
+                    (character)))))))))))
+
+
