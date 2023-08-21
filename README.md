@@ -10,18 +10,15 @@ The constraints of a tree-sitter grammar differ from the constraints of iXML. So
 
 Consequently, this grammar isn’t “the same” as iXML, though it’s expected to be close enough for useful syntax directed highlighting.
 
-This grammar differs from iXML in the following ways.
+This grammar differs from iXML in a number of ways.
 
 1. A tree-sitter grammar can’t have a nonterminal that matches nothing. To address this limitation, an `alt` has been defined so that it must contain at least one `term`. In the places where `alt` appears, it has been made optional.
 
 2. The definition of a `set` in iXML includes both `string` and `range` and `range` begins with `character`. A `string` containing a single character and a `character` are indistinguishable. This leads to confusion about what `["L"]` means (it’s either a string or a broken range). To work around this problem, the tree-sitter grammar defines `set` a little differently.
 
-## Open questions
+3. To support syntax highlighting, one of the goals of this grammar is to *expose* parts of the syntax that aren’t actually relevant to the grammar (the hyphens in ranges, the parenthesis around alts, etc.).
 
-1. Which symbols in the tree-sitter grammar should be hidden?
-2. Would the grammar benefit from using fields?
+## Emacs mode
 
-## Known problems
-
-See the [issues list](https://github.com/nineml/tree-sitter-ixml/issues).
-
+The `ixml-ts-mode` supports tree-sitter based syntax highlighting in Emacs 29.1 assuming you have
+[all the basics covered](https://www.masteringemacs.org/article/how-to-get-started-tree-sitter).
