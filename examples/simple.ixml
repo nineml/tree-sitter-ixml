@@ -1,0 +1,4 @@
+name: namestart?, namefollow* .
+namestart: ["a"-"z"]. { not a very reasonable definition }
+namefollow: namestart | ["0"-"9" | #5f] . 
+fred: ~[].

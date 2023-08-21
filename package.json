@@ -13,5 +13,14 @@
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.20.8"
-  }
+  },
+  "repository": "https://github.com/nineml/tree-sitter-ixml/",
+  "tree-sitter": [
+    {
+      "scope": "source.ixml",
+      "file-types": [
+        "ixml"
+      ]
+    }
+  ]
 }
