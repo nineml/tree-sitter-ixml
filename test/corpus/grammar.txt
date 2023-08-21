@@ -9,13 +9,11 @@ simple rule
 (source_file
   (rule
     (mark)
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 simple rule with comments
@@ -28,15 +26,13 @@ simple rule with comments
 (source_file
   (rule
     (mark)
-    (name)
+    (rulename)
+    (rulesep)
     (comment)
-    (alts
-      (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))))
-    (comment)))
+    (alt
+      (nonterminal))
+    (comment)
+    (fullstop)))
 
 =================
 rule without a mark
@@ -48,13 +44,12 @@ s: a .
 
 (source_file
   (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop)))
+
 
 =================
 grammar with a prolog
@@ -68,18 +63,14 @@ s: a .
 (source_file
   (prolog
     (version
-      (string
-        (char)
-        (char)
-        (char))))
+      (string))
+    (fullstop))
   (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 two rules
@@ -92,21 +83,17 @@ a: b .
 
 (source_file
   (rule
-    (name)
-    (alts
+    (rulename)
+      (rulesep)
       (alt
-        (term
-          (factor
-            (nonterminal
-              (name)))))))
+        (nonterminal))
+      (fullstop))
   (rule
-    (name)
-    (alts
+    (rulename)
+      (rulesep)
       (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))))))
+        (nonterminal))
+      (fullstop)))
 
 =================
 a rule with a string literal
@@ -118,17 +105,13 @@ s: "a".
 
 (source_file
   (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (literal
-                (quoted
-                  (string
-                    (char)))))))))))
-
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string))))
+    (fullstop)))
 
 =================
 rules with escaped string literal
@@ -141,53 +124,21 @@ t: 'c''d'.
 
 (source_file
   (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (literal
-                (quoted
-                  (string
-                    (char)
-                    (escaped_dquote)
-                    (char))))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string))))
+    (fullstop))
   (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (literal
-                (quoted
-                  (string
-                    (char)
-                    (escaped_squote)
-                    (char)))))))))))
-
-=================
-a rule named “ixml”
-=================
-
-ixml: S, rules.
-
----
-
-(source_file
-  (rule
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (nonterminal
-              (name))))
-        (term
-          (factor
-            (nonterminal
-              (name))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string))))
+    (fullstop)))
 
 =================
 a member that’s a character
@@ -200,20 +151,17 @@ a member that’s a character
 (source_file
   (rule
     (mark)
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (charset
-                (inclusion
-                  (tmark)
-                  (set
-                    (member
-                      (character
-                        (char)))))))))))))
-
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (tmark)
+        (set
+          (osq)
+          (member
+            (character))
+          (csq)))) 
+    (fullstop)))
 
 =================
 a member that’s a string
@@ -226,21 +174,17 @@ a member that’s a string
 (source_file
   (rule
     (mark)
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (charset
-                (inclusion
-                  (tmark)
-                  (set
-                    (member
-                      (string
-                        (char)
-                        (char)))))))))))))
-
+     (rulename)
+     (rulesep)
+     (alt
+       (charset
+         (tmark)
+         (set
+           (osq)
+           (member
+             (string))
+           (csq))))
+     (fullstop)))
 
 =================
 a member that’s a string range
@@ -253,24 +197,22 @@ a member that’s a string range
 (source_file
   (rule
     (mark)
-    (name)
-    (alts
-      (alt
-        (term
-          (factor
-            (terminal
-              (charset
-                (inclusion
-                  (tmark)
-                  (set
-                    (member
-                      (range
-                        (from
-                          (character
-                            (char)))
-                        (to
-                          (character
-                            (char)))))))))))))))
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (tmark)
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (fullstop)))
 
 =================
 empty comment
@@ -282,14 +224,12 @@ S: {} a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment)
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 comment with spaces
@@ -301,14 +241,12 @@ S: {  } a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment)
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 non-empty comment
@@ -320,14 +258,12 @@ S: { abc } a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment)
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 nested comment
@@ -339,15 +275,13 @@ S: { {abc} } a .
 
 (source_file
   (rule
-    (name)
+  (rulename)
+    (rulesep)
     (comment
       (comment))
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 nested comment at start
@@ -359,15 +293,13 @@ S: {{abc} } a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment
       (comment))
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 nested comment at end
@@ -379,15 +311,13 @@ S: { {abc}} a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment
       (comment))
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 deeply nested comment
@@ -399,17 +329,15 @@ S: {{a{b{c}}}} a .
 
 (source_file
   (rule
-    (name)
+    (rulename)
+    (rulesep)
     (comment
       (comment
         (comment
           (comment))))
-      (alts
-        (alt
-          (term
-            (factor
-              (nonterminal
-                (name))))))))
+    (alt
+      (nonterminal))
+    (fullstop)))
 
 =================
 curly brace in a string
@@ -421,13 +349,541 @@ S: "{" .
 
 (source_file
   (rule
-    (name)
-      (alts
-        (alt
-          (term
-            (factor
-              (terminal
-                (literal
-                  (quoted
-                    (string
-                      (char)))))))))))
+  (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string))))
+    (fullstop)))
+
+=================
+a rule named “ixml”
+=================
+
+ixml: a .
+
+---
+
+(source_file
+  (rule
+    (rulename)
+      (rulesep)
+      (alt
+        (nonterminal))
+      (fullstop)))
+
+=================
+a “real” example
+=================
+
+ixml: S, rules.
+-rules: rule; rule, rules.
+rule: mark, name, S, -"::=", S, def;
+      name, S, -"::=", S, def.
+def: alts .
+-alts: alt; alt, -"|", S, alts .
+alt: terms; empty .
+-terms: term; term, terms .
+empty: .
+term: mark, name, S; name, S; string, S; range .
+@name: -"<", letters, -">" .
+@mark: "@", S; "^", S; "-", S .
+letters: letter, more-letters .
+letter: ["a"-"z"]; ["A"-"Z"]; ["0"-"9"] .
+more-letters: letter, more-letters; "-", more-letters; .
+@string: -"""", chars, -"""" .
+chars: char, chars; char .
+char: [" "-"!"]; ["#"-"~"]; -'"', '"'. {all characters, quotes must be doubled}
+range: -"[", S,  from, S, -"-", S, to, S, -"]", S .
+@from: character .
+@to: character .
+-character: -"""", char, -""""; -"""", """", -"""", -"""" .
+-S: -[" "; #a; #d], S; comment, S; .
+comment: "{", schars, "}" .
+-schars: schar, schars; .
+-schar: [" "-"|"]; "~" . {Everything except: }
+
+---
+
+(source_file
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string))))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (altsep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (altsep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string))))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (altsep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (literal
+        (quoted
+          (string))))
+    (fullstop))
+  (comment)
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string))))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string)))
+      (termsep)
+      (literal
+        (quoted
+          (tmark)
+          (string))))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (tmark)
+        (set
+          (osq)
+          (member
+            (character))
+          (altsep)
+          (member
+            (character
+              (hex)))
+          (altsep)
+          (member
+            (character
+              (hex)))
+          (csq)))
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (fullstop))
+  (rule
+    (rulename)
+    (rulesep)
+    (alt
+      (literal
+        (quoted
+          (string)))
+      (termsep)
+      (nonterminal)
+      (termsep)
+      (literal
+        (quoted
+          (string))))
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (nonterminal)
+      (termsep)
+      (nonterminal))
+    (altsep)
+    (fullstop))
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+    (alt
+      (charset
+        (set
+          (osq)
+          (member
+            (range
+              (from
+                (character))
+              (hyphen)
+              (to
+                (character))))
+          (csq))))
+    (altsep)
+    (alt
+      (literal
+        (quoted
+          (string))))
+    (fullstop))
+  (comment))
+
+=================
+simple rule no space before full stop
+=================
+
+^s: a.
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (rulename)
+    (rulesep)
+      (alt
+        (nonterminal))
+    (fullstop)))
+
