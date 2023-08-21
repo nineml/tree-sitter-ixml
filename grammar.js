@@ -1,59 +1,64 @@
 module.exports = grammar({
   name: 'ixml',
 
-  extras: $ => [
+  extras: ($) => [
     /\s/,
     $.comment
   ],
 
   rules: {
-    source_file: $ => seq(optional($.prolog), repeat1($.rule)),
+    source_file: ($) => seq(optional($.prolog), repeat1($.rule)),
 
-    rule: $ => choice(
-      seq(optional($.mark), $.name, /[:=]/, $.alts, '.'),
-      seq(optional($.mark), $.name, /[:=]/, '.'),
-    ),
+    // alts isn't allowed to be empty, so make it optional
+    rule: ($) => seq(optional($.mark), $.name, /[:=]/, optional($.alts), '.'),
 
-    prolog: $ => $.version,
+    prolog: ($) => $.version,
 
-    version: $ => seq("ixml", "version", $.string, '.'),
+    version: ($) => seq("ixml", "version", $.string, '.'),
     
-    tmark: $ => /[-^]/,
-    mark: $ => /[-^@]/,
-    name: $ => /[a-zA-Z_][-a-zA-Z0-9_]*/,
-    string: $ => prec(2, choice(
-      seq('"', repeat1($._dchar), token.immediate('"')),
-      seq("'", repeat1($._schar), token.immediate("'"))
-    )),
+    tmark: ($) => /[-^]/,
+    mark: ($) => /[-^@]/,
+    name: ($) => /[_\p{L}][-.·‿⁀\p{Nd}\p{Mn}]*/,
 
-    _dchar: $ => token.immediate(choice(/[^"]/, '""')),
+    string: ($) => choice($._string_dquote, $._string_squote),
 
-    _schar: $ => token.immediate(choice(/[^']/, "''")),
+    _string_dquote: ($) => seq('"', repeat($._string_dquote_content), '"'),
+    _string_dquote_content: ($) => choice($.escaped_dquote, $.char),
+    escaped_dquote: ($) => '""',
 
-    comment: $ => token(prec(-1, seq(
+    _string_squote: ($) => seq("'", repeat($._string_squote_content), "'"),
+    _string_squote_content: ($) => choice($.escaped_squote, $.char),
+    escaped_squote: ($) => "''",
+
+    char: ($) => /[^\p{C}]/,
+
+    // FIXME: nested comments
+    comment: ($) => token(prec(-1, seq(
       '{',
       /[^{}]*/,
       '}'
     ))),
 
-    alts: $ => seq($.alt, repeat(seq(/[;|]/, optional($.alt)))),
+    // alts isn't allowed to be empty, so make it optional
+    alts: ($) => seq($.alt, repeat(seq(/[;|]/, optional($.alt)))),
 
-    alt: $ => $._term_star_sep,
+    alt: ($) => $._term_star_sep,
 
-    _term_star_sep: $ => $._term_plus_plus_sep,
+    _term_star_sep: ($) => $._term_plus_plus_sep,
 
-    _term_plus_plus_sep: $ => $._term_plus_sep,
+    _term_plus_plus_sep: ($) => $._term_plus_sep,
 
-    _term_plus_sep: $ => seq($.term, repeat(seq(',', $.term))),
+    _term_plus_sep: ($) => seq($.term, repeat(seq(',', $.term))),
 
-    term: $ => choice(
+    term: ($) => choice(
       $.factor,
       $.option,
       $.repeat0,
       $.repeat1
     ),
 
-    factor: $ => choice(
+    // alts isn't allowed to be empty, so make () an explicit option
+    factor: ($) => choice(
       $.terminal,
       $.nonterminal,
       $.insertion,
@@ -61,79 +66,82 @@ module.exports = grammar({
       seq('(', ')')
     ),
 
-    repeat0: $ => choice(
+    repeat0: ($) => choice(
       seq($.factor, '*'),
       seq($.factor, '**', $.sep)
     ),
 
-    repeat1: $ => choice(
+    repeat1: ($) => choice(
       seq($.factor, '+'),
       seq($.factor, '++', $.sep)
     ),
     
-    option: $ => seq($.factor, '?'),
+    option: ($) => seq($.factor, '?'),
 
-    sep: $ => $.factor,
+    sep: ($) => $.factor,
 
-    nonterminal: $ => seq(optional($.mark), $.name),
+    nonterminal: ($) => seq(optional($.mark), $.name),
 
-    terminal: $ => choice(
+    terminal: ($) => choice(
       $.literal,
       $.charset
     ),
 
-    literal: $ => choice(
+    literal: ($) => choice(
       $.quoted,
       $.encoded
     ),
 
-    quoted: $ => seq(optional($.tmark), $.string),
+    quoted: ($) => seq(optional($.tmark), $.string),
 
-    encoded: $ => seq(optional($.tmark), '#', $.hex),
+    encoded: ($) => seq(optional($.tmark), '#', $.hex),
 
-    hex: $ => /[a-fA-F0-9]+/,
+    hex: ($) => /[a-fA-F0-9]+/,
 
-    charset: $ => choice(
-      $.inclusion,
-      $.exclusion
-    ),
-
-    inclusion: $ => seq(optional($.tmark), $.set),
-    exclusion: $ => seq(optional($.tmark), '~', $.set),
-
-    set: $ => choice(
+    // member isn't allowed to be empty, so make [] an explicit option
+    set: ($) => choice(
       seq('[', ']'),
       seq('[', $.member, repeat(seq(/[;|]/, $.member)), ']')
     ),
 
-    member: $ => choice(
+    // In iXML, "L" matches both "character" and "string". That makes
+    // "L" the start of a range and "L" the string ambiguous. I'm
+    // fixing that by rewriting the rule for member a bit. The point
+    // here is useful editing guidance, not semantic equivalance.
+    member: ($) => choice(
       $.range,
       $.string,
-      seq('#', $.hex),
+      $.character,
       $.chclass
     ),
 
-    range: $ => prec(2, seq($.from, '-', $.to)),
+    range: ($) => seq($.from, '-', $.to),
 
-    from: $ => $.character,
-    to: $ => $.character,
-    character: $ => prec(2, choice(
-      seq('"', $._dchar, token.immediate('"')),
-      seq("'", $._schar, token.immediate("'")),
+    from: ($) => $.character,
+    to: ($) => $.character,
+    character: ($) => choice(
+      seq('"', $._string_dquote_content, token.immediate('"')),
+      seq("'", $._string_squote_content, token.immediate("'")),
       seq('#', $.hex)
-    )),
+    ),
 
-    chclass: $ => $._code,
-    _code: $ => seq($._capital, $._letter),
-    _capital: $ => /[A-Z]/,
-    _letter: $ => /[A-Za-z]/,
+    charset: ($) => choice(
+      $.inclusion,
+      $.exclusion
+    ),
 
-    insertion: $ => seq('+', choice($.string, seq('#', $.hex)))
+    inclusion: ($) => seq(optional($.tmark), $.set),
+    exclusion: ($) => seq(optional($.tmark), '~', $.set),
+
+    chclass: ($) => $._code,
+    _code: ($) => seq($._capital, $._letter),
+    _capital: ($) => /[A-Z]/,
+    _letter: ($) => /[A-Za-z]/,
+
+    insertion: ($) => seq('+', choice($.string, seq('#', $.hex)))
   },
 
-  conflicts: $ => [
-    [$.character, $.string, $.range],
-    [$.version, $.rule]
+  conflicts: ($) => [
+    [$.character, $.string]
   ]
-
 });
