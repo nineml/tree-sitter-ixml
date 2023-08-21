@@ -32,12 +32,10 @@ module.exports = grammar({
 
     char: ($) => /[^\p{C}]/,
 
-    // FIXME: nested comments
-    comment: ($) => token(prec(-1, seq(
-      '{',
-      /[^{}]*/,
-      '}'
-    ))),
+    // N.B. This takes advantage of the fact that $.comment is in extras.
+    // That's what allows nested comments in _comment_text
+    comment: ($) => seq(token(prec(-3, '{')), repeat($._comment_text), '}'),
+    _comment_text: ($) => /[^\{\}]/,
 
     // alts isn't allowed to be empty, so make it optional
     alts: ($) => seq($.alt, repeat(seq(/[;|]/, optional($.alt)))),
