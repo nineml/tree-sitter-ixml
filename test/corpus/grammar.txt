@@ -68,7 +68,10 @@ s: a .
 (source_file
   (prolog
     (version
-      (string)))
+      (string
+        (char)
+        (char)
+        (char))))
   (rule
     (name)
     (alts
@@ -104,6 +107,65 @@ a: b .
           (factor
             (nonterminal
               (name))))))))
+
+=================
+a rule with a string literal
+=================
+
+s: "a".
+
+---
+
+(source_file
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (literal
+                (quoted
+                  (string
+                    (char)))))))))))
+
+
+=================
+rules with escaped string literal
+=================
+
+s: "a""b".
+t: 'c''d'.
+
+---
+
+(source_file
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (literal
+                (quoted
+                  (string
+                    (char)
+                    (escaped_dquote)
+                    (char))))))))))
+  (rule
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (literal
+                (quoted
+                  (string
+                    (char)
+                    (escaped_squote)
+                    (char)))))))))))
 
 =================
 a rule named “ixml”
@@ -148,6 +210,64 @@ a member that’s a character
                 (inclusion
                   (tmark)
                   (set
-                    (character)))))))))))
+                    (member
+                      (character
+                        (char)))))))))))))
 
 
+=================
+a member that’s a string
+=================
+
+-S: -["ab"] .
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (charset
+                (inclusion
+                  (tmark)
+                  (set
+                    (member
+                      (string
+                        (char)
+                        (char)))))))))))))
+
+
+=================
+a member that’s a string range
+=================
+
+-S: -["a" - "b"] .
+
+---
+
+(source_file
+  (rule
+    (mark)
+    (name)
+    (alts
+      (alt
+        (term
+          (factor
+            (terminal
+              (charset
+                (inclusion
+                  (tmark)
+                  (set
+                    (member
+                      (range
+                        (from
+                          (character
+                            (char)))
+                        (to
+                          (character
+                            (char)))))))))))))))
