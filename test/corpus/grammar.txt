@@ -271,3 +271,163 @@ a member that’s a string range
                         (to
                           (character
                             (char)))))))))))))))
+
+=================
+empty comment
+=================
+
+S: {} a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment)
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+comment with spaces
+=================
+
+S: {  } a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment)
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+non-empty comment
+=================
+
+S: { abc } a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment)
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+nested comment
+=================
+
+S: { {abc} } a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment
+      (comment))
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+nested comment at start
+=================
+
+S: {{abc} } a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment
+      (comment))
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+nested comment at end
+=================
+
+S: { {abc}} a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment
+      (comment))
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+deeply nested comment
+=================
+
+S: {{a{b{c}}}} a .
+
+---
+
+(source_file
+  (rule
+    (name)
+    (comment
+      (comment
+        (comment
+          (comment))))
+      (alts
+        (alt
+          (term
+            (factor
+              (nonterminal
+                (name))))))))
+
+=================
+curly brace in a string
+=================
+
+S: "{" .
+
+---
+
+(source_file
+  (rule
+    (name)
+      (alts
+        (alt
+          (term
+            (factor
+              (terminal
+                (literal
+                  (quoted
+                    (string
+                      (char)))))))))))
