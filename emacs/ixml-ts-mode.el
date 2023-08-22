@@ -55,6 +55,10 @@
 (defvar ixml-ts-mode--font-lock-settings
   (treesit-font-lock-rules
    :language 'ixml
+   :feature 'error
+   '((ERROR) @font-lock-warning-face)
+
+   :language 'ixml
    :feature 'bracket
    '((osp) @font-lock-bracket-face
      (csp) @font-lock-bracket-face
@@ -75,8 +79,8 @@
 
    :language 'ixml
    :feature 'name
-   '((rulename) @font-lock-keyword-face
-     (nonterminal) @font-lock-function-name-face)
+   '((rulename) @font-lock-constant-face
+     (nonterminal) @font-lock-type-face)
 
    :language 'ixml
    :feature 'string
@@ -87,7 +91,7 @@
    :language 'ixml
    :feature 'constant
    :override t
-   `((hex) @font-lock-constant-face))
+   `((hex) @font-lock-regexp-face))
 
   "Tree-sitter font-lock settings for `ixml-ts-mode'.")
 
@@ -126,7 +130,7 @@
     (setq-local treesit-font-lock-settings ixml-ts-mode--font-lock-settings)
 
     (setq-local treesit-font-lock-feature-list
-                '((comment name)
+                '((comment name error)
                   (string)
                   (constant)
                   (bracket delimiter)))
